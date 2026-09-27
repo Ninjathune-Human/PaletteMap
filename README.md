@@ -1,4 +1,4 @@
-![PaletteMap](assets/banner.png)
+![PaletteMap](banner.png)
 
 # PaletteMap
 
