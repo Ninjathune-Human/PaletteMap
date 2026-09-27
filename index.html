@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PaletteMap : les palettes de la manette Xbox Elite vers le clavier</title>
+<meta name="description" content="Application Windows qui affecte des touches clavier ou des combinaisons de boutons de manette aux quatre palettes de la manette Xbox Elite Series 1.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%231D2733'/%3E%3Ccircle cx='16' cy='16' r='5' fill='%23EBEEF1'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #EBEEF1; --panel: #F6F7F9; --ink: #1D2733; --muted: #4A5563; --line: #A7B0BA; --accent: #2F4FE0;
+  --font: "Instrument Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --paper: #171C22; --panel: #1F252D; --ink: #E6EAEE; --muted: #A9B2BC; --line: #4D5763; --accent: #7B90FF; }
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font);
+  font-size: 1.0625rem; line-height: 1.55;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+a { color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible, .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+
+header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; }
+.mark { font-weight: 600; letter-spacing: -0.01em; color: var(--ink); text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
+header nav a { color: var(--muted); text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; padding: 0 4px; }
+header nav a:hover { color: var(--ink); }
+
+.hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px; align-items: center; padding: 56px 0 72px; }
+h1 { font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 600; letter-spacing: -0.035em; line-height: 1; margin: 0; }
+.lead { font-size: 1.3rem; line-height: 1.4; color: var(--muted); margin: 24px 0 32px; max-width: 30ch; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
+.btn { display: inline-flex; align-items: center; min-height: 48px; padding: 0 24px; border-radius: 999px; background: var(--ink); color: var(--paper); font-weight: 500; text-decoration: none; }
+.btn:hover { opacity: .88; }
+.actions a:not(.btn) { min-height: 44px; display: inline-flex; align-items: center; }
+
+.drawing { width: 100%; height: auto; display: block; }
+.drawing .axis { stroke: var(--line); stroke-width: 1; stroke-dasharray: 6 6; }
+.drawing .body { fill: none; stroke: var(--ink); stroke-width: 1.4; }
+.drawing .pad { fill: var(--accent); }
+.drawing .lead { fill: none; stroke: var(--ink); stroke-width: .9; }
+.drawing .dot { fill: var(--ink); }
+.drawing .name { font: 500 16px var(--font); fill: var(--ink); }
+.drawing .bind { font: 600 18px var(--font); fill: var(--accent); }
+/* un seul moment animé : les palettes s'allument l'une après l'autre au chargement */
+@media (prefers-reduced-motion: no-preference) {
+  .drawing .pad { animation: press .5s ease-out both; }
+  .drawing .pad1 { animation-delay: .35s; } .drawing .pad2 { animation-delay: .7s; } .drawing .pad3 { animation-delay: 1.05s; }
+  @keyframes press { from { opacity: .15; } to { opacity: 1; } }
+}
+
+section { padding: 64px 0; border-top: 1px solid var(--line); }
+h2 { font-size: 1.75rem; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 12px; }
+.intro { color: var(--muted); max-width: 62ch; margin: 0 0 40px; }
+
+.flow { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.flow li { position: relative; padding: 20px 24px 0 0; border-top: 2px solid var(--ink); }
+.flow li::before { content: ""; position: absolute; top: -7px; left: 0; width: 12px; height: 12px; border-radius: 50%; background: var(--paper); border: 2px solid var(--ink); }
+.flow li:last-child::before { background: var(--accent); border-color: var(--accent); }
+.flow h3 { font-size: 1.0625rem; font-weight: 600; margin: 0 0 6px; }
+.flow p { margin: 0; color: var(--muted); font-size: .98rem; }
+
+.steps { counter-reset: step; list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.steps li { counter-increment: step; display: grid; grid-template-columns: 56px minmax(0, 1fr); padding: 24px 0; border-bottom: 1px solid var(--line); }
+.steps li::before { content: counter(step); font-size: 1.75rem; font-weight: 500; line-height: 1.1; color: var(--accent); }
+.steps li:last-child { border-bottom: 0; }
+.steps h3 { font-size: 1.125rem; font-weight: 600; margin: 0 0 6px; }
+.steps p { margin: 0; color: var(--muted); max-width: 66ch; }
+
+.drivers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; }
+.drivers h3 { font-size: 1.125rem; font-weight: 600; margin: 0 0 8px; }
+.drivers p { margin: 0 0 12px; color: var(--muted); }
+
+footer { padding: 32px 0 48px; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
+
+@media (max-width: 860px) {
+  .hero { grid-template-columns: 1fr; gap: 32px; padding: 32px 0 48px; }
+  .flow { grid-template-columns: 1fr; gap: 0; }
+  .flow li { border-top: 0; border-left: 2px solid var(--ink); padding: 0 0 28px 24px; }
+  .flow li::before { top: 0; left: -7px; }
+  .drivers { grid-template-columns: 1fr; gap: 24px; }
+  section { padding: 48px 0; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="mark" href="#">PaletteMap</a>
+    <nav><a href="https://github.com/Ninjathune/PaletteMap">Code source sur GitHub</a></nav>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div>
+        <h1>PaletteMap</h1>
+        <p class="lead">Affectez une touche clavier ou une combinaison de boutons aux quatre palettes de la manette Xbox Elite Series 1.</p>
+        <div class="actions">
+          <a class="btn" href="https://github.com/Ninjathune/PaletteMap/releases/latest">Télécharger pour Windows</a>
+          <a href="#installation">Voir l'installation</a>
+        </div>
+      </div>
+      <svg class="drawing" viewBox="0 0 640 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Manette Xbox Elite vue de dos, les quatre palettes reliées à leurs affectations">
+<line class="axis" x1="320" y1="24" x2="320" y2="372"/>
+<path class="body" d="M204.8,63.0 C248.0,50.0 392.0,50.0 435.2,63.0 C471.2,70.2 492.8,91.8 501.4,127.8 C513.0,174.6 525.2,228.6 513.0,261.0 C503.6,282.6 474.8,282.6 456.8,268.2 C438.8,251.6 424.4,219.9 402.8,207.0 C377.6,198.3 262.4,198.3 237.2,207.0 C215.6,219.9 201.2,251.6 183.2,268.2 C165.2,282.6 136.4,282.6 127.0,261.0 C114.8,228.6 127.0,174.6 138.6,127.8 C147.2,91.8 168.8,70.2 204.8,63.0 Z"/>
+<rect class="pad pad0" x="220.4" y="148.4" width="12" height="38" rx="6" transform="rotate(16 226.4 167.4)"/>
+<polyline class="lead" points="226.4,167.4 92,128 8,128"/>
+<circle class="dot" cx="226.4" cy="167.4" r="2.6"/>
+<text class="name" x="8" y="118" text-anchor="start">Haut gauche</text>
+<text class="bind" x="8" y="150" text-anchor="start">LT + A</text>
+<rect class="pad pad1" x="197.4" y="200.9" width="12" height="38" rx="6" transform="rotate(22 203.4 219.9)"/>
+<polyline class="lead" points="203.4,219.9 92,318 8,318"/>
+<circle class="dot" cx="203.4" cy="219.9" r="2.6"/>
+<text class="name" x="8" y="308" text-anchor="start">Bas gauche</text>
+<text class="bind" x="8" y="340" text-anchor="start">Ctrl + 1</text>
+<rect class="pad pad2" x="407.6" y="148.4" width="12" height="38" rx="6" transform="rotate(-16 413.6 167.4)"/>
+<polyline class="lead" points="413.6,167.4 548,128 632,128"/>
+<circle class="dot" cx="413.6" cy="167.4" r="2.6"/>
+<text class="name" x="632" y="118" text-anchor="end">Haut droit</text>
+<text class="bind" x="632" y="150" text-anchor="end">RT + B</text>
+<rect class="pad pad3" x="430.6" y="200.9" width="12" height="38" rx="6" transform="rotate(-22 436.6 219.9)"/>
+<polyline class="lead" points="436.6,219.9 548,318 632,318"/>
+<circle class="dot" cx="436.6" cy="219.9" r="2.6"/>
+<text class="name" x="632" y="308" text-anchor="end">Bas droit</text>
+<text class="bind" x="632" y="340" text-anchor="end">Maj</text>
+</svg>
+    </div>
+
+    <section id="fonctionnement">
+      <h2>Comment ça marche</h2>
+      <p class="intro">Une fois non assignées, les palettes de l'Elite Series 1 disparaissent pour Windows : aucun logiciel standard ne peut plus les lire. La manette continue pourtant d'envoyer leur état sur le câble USB. PaletteMap le récupère à cet endroit, sans toucher au driver Xbox.</p>
+      <ol class="flow">
+        <li><h3>Manette</h3><p>Palettes non assignées dans Accessoires Xbox. Le jeu voit la manette normalement.</p></li>
+        <li><h3>USBPcap</h3><p>Lit le trafic USB en lecture seule. Le dernier octet de chaque rapport de la manette porte l'état des palettes.</p></li>
+        <li><h3>PaletteMap</h3><p>Traduit chaque palette selon votre réglage, dans une petite fenêtre en zone de notification.</p></li>
+        <li><h3>Jeu</h3><p>Reçoit une touche clavier, ou des boutons via une manette virtuelle créée par ViGEmBus.</p></li>
+      </ol>
+    </section>
+
+    <section id="installation">
+      <h2>Installation</h2>
+      <p class="intro">Windows 10 ou 11, manette branchée en USB. Les étapes 2 et 3 installent des drivers : elles ne se font qu'une fois.</p>
+      <ol class="steps">
+        <li><div><h3>Libérer les palettes</h3><p>Dans l'application Accessoires Xbox, créez un profil dont les quatre palettes sont non assignées, attribuez-le à un emplacement, puis placez le commutateur au dos de la manette sur cet emplacement.</p></div></li>
+        <li><div><h3>Installer USBPcap</h3><p>Depuis <a href="https://desowin.org/usbpcap/">desowin.org/usbpcap</a>, ou en cochant l'option USBPcap dans l'installateur de Wireshark. Redémarrez le PC.</p></div></li>
+        <li><div><h3>Installer ViGEmBus</h3><p>Version 1.22.0, depuis la <a href="https://github.com/nefarius/ViGEmBus/releases">page officielle des versions</a>. Facultatif si vous n'affectez que des touches clavier.</p></div></li>
+        <li><div><h3>Lancer PaletteMap</h3><p>Acceptez la demande d'autorisation de Windows, cliquez sur une palette pour choisir ses boutons ou sa touche, et cochez le lancement au démarrage de Windows.</p></div></li>
+      </ol>
+    </section>
+
+    <section id="drivers">
+      <h2>Pourquoi deux drivers</h2>
+      <p class="intro">Une application seule ne peut ni lire les palettes ni créer une manette : ces deux opérations passent par le noyau de Windows, qui n'accepte que des drivers signés.</p>
+      <div class="drivers">
+        <div>
+          <h3>USBPcap, pour lire</h3>
+          <p>Driver de capture USB utilisé par Wireshark. Il observe les échanges entre la manette et le PC sans les modifier. Son accès étant réservé aux administrateurs, PaletteMap demande ces droits au lancement.</p>
+        </div>
+        <div>
+          <h3>ViGEmBus, pour envoyer des boutons</h3>
+          <p>Crée une manette Xbox 360 virtuelle. PaletteMap ne s'en sert que pour les combinaisons issues des palettes, par exemple LT puis A : votre vraie manette n'est ni masquée ni retransmise. Le projet est archivé depuis 2023 mais fonctionne toujours.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    PaletteMap s'appuie sur <a href="https://github.com/desowin/usbpcap">USBPcap</a> et <a href="https://github.com/nefarius/ViGEmBus">ViGEmBus</a>. Projet indépendant, sans lien avec Microsoft ni Blizzard.
+  </footer>
+</div>
+</body>
+</html>
