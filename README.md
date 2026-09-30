@@ -17,22 +17,8 @@ Page de présentation : [index.html](index.html) (publiable avec GitHub Pages).
 
 Sur l'Elite Series 1, Les palettes ne peuvent être assigné qu'aux seuls boutons de la manette. C'est une limitation des drivers de microsoft. Avec mon ami Claude, nous avons trouvé que les palettes étaient cependant bien assignées individuellement, ce qui nous a permis de mettre au point ce petit logiciel sans prétention, qui permet tout de même de supprimer une limitation matériel. Couplé au Driver Viegmbus, toutes les combinaison de bind de touches clavier ou manettes sont possible !
 
-**Lecture.** PaletteMap observe le trafic USB grâce au driver de capture **USBPcap**, sans rien modifier : le driver Xbox officiel reste en place. Il repère les rapports d'entrée de l'Elite Series 1 (identifiant USB `045E:02E3`, rapport GIP de type `0x20` long de 33 octets) et lit leur dernier octet, qui porte l'état des palettes :
-
-   | Palette     | Bit    |
-   |-------------|--------|
-   | Haut gauche | `0x01` |
-   | Haut droit  | `0x02` |
-   | Bas gauche  | `0x04` |
-   | Bas droit   | `0x08` |
-
-### Pourquoi deux drivers
-
-Une application ne peut ni lire le trafic USB d'un autre périphérique, ni créer une manette que les jeux reconnaissent : ces deux opérations se font dans le noyau de Windows, qui n'accepte que des drivers signés par Microsoft. PaletteMap s'appuie donc sur deux drivers libres et signés, installés une seule fois :
-
 | Driver | Rôle | Obligatoire |
 |---|---|---|
-| [USBPcap](https://desowin.org/usbpcap/) | Lire l'état des palettes dans le trafic USB | Oui |
 | [ViGEmBus](https://github.com/nefarius/ViGEmBus/releases) | Créer la manette virtuelle pour les affectations de boutons | Seulement pour les boutons de manette |
 
 ViGEmBus a été archivé par son auteur en novembre 2023 et ne reçoit plus de mises à jour, mais il fonctionne toujours et reste utilisé par de nombreux outils (DS4Windows, etc.). Installez-le uniquement depuis sa page GitHub officielle.
