@@ -75,6 +75,16 @@ h2 { font-size: 1.75rem; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 
 .steps h3 { font-size: 1.125rem; font-weight: 600; margin: 0 0 6px; }
 .steps p { margin: 0; color: var(--muted); max-width: 66ch; }
 
+.soft { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.soft li { display: grid; grid-template-columns: 240px minmax(0, 1fr) 220px; gap: 8px 32px; align-items: center; padding: 20px 0; border-bottom: 1px solid var(--line); }
+.soft h3 { font-size: 1.125rem; font-weight: 600; margin: 0; }
+.soft .req { display: block; font-size: .9rem; font-weight: 400; color: var(--muted); margin-top: 2px; }
+.soft p { margin: 0; color: var(--muted); }
+.soft .get { justify-self: end; display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 20px; border-radius: 999px; border: 1px solid var(--ink); color: var(--ink); font-weight: 500; text-decoration: none; white-space: nowrap; }
+.soft .get:hover { background: var(--ink); color: var(--paper); }
+.soft .get:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.note { color: var(--muted); max-width: 66ch; margin: 24px 0 0; }
+
 .drivers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; }
 .drivers h3 { font-size: 1.125rem; font-weight: 600; margin: 0 0 8px; }
 .drivers p { margin: 0 0 12px; color: var(--muted); }
@@ -87,6 +97,8 @@ footer { padding: 32px 0 48px; border-top: 1px solid var(--line); color: var(--m
   .flow li { border-top: 0; border-left: 2px solid var(--ink); padding: 0 0 28px 24px; }
   .flow li::before { top: 0; left: -7px; }
   .drivers { grid-template-columns: 1fr; gap: 24px; }
+  .soft li { grid-template-columns: 1fr; }
+  .soft .get { justify-self: start; }
   section { padding: 48px 0; }
 }
 </style>
@@ -145,14 +157,42 @@ footer { padding: 32px 0 48px; border-top: 1px solid var(--line); color: var(--m
       </ol>
     </section>
 
+    <section id="logiciels">
+      <h2>Logiciels nécessaires</h2>
+      <p class="intro">Tous gratuits. À réinstaller dans cet ordre après une réinstallation de Windows.</p>
+      <ul class="soft">
+        <li>
+          <h3>Accessoires Xbox<span class="req">Obligatoire, une fois</span></h3>
+          <p>Application Microsoft pour régler les quatre palettes sur «&nbsp;Non assigné&nbsp;». Le réglage reste enregistré dans la manette.</p>
+          <a class="get" href="https://apps.microsoft.com/detail/9nblggh30xj3">Microsoft Store</a>
+        </li>
+        <li>
+          <h3>USBPcap<span class="req">Obligatoire</span></h3>
+          <p>Driver qui lit l'état des palettes sur le câble USB. Sans lui, PaletteMap affiche «&nbsp;USBPcap introuvable&nbsp;».</p>
+          <a class="get" href="https://desowin.org/usbpcap/">Télécharger USBPcap</a>
+        </li>
+        <li>
+          <h3>ViGEmBus 1.22.0<span class="req">Pour les boutons de manette</span></h3>
+          <p>Driver qui crée la manette virtuelle. Sans lui, seules les touches clavier sont disponibles.</p>
+          <a class="get" href="https://github.com/nefarius/ViGEmBus/releases">Télécharger ViGEmBus</a>
+        </li>
+        <li>
+          <h3>PaletteMap<span class="req">Obligatoire</span></h3>
+          <p>L'application, en un seul fichier exécutable. Aucune installation de .NET n'est nécessaire.</p>
+          <a class="get" href="https://github.com/ninjathune-human/PaletteMap/releases/latest">Télécharger PaletteMap</a>
+        </li>
+      </ul>
+      <p class="note">Redémarrez le PC après avoir installé USBPcap et ViGEmBus : ces drivers ne sont actifs qu'après un redémarrage.</p>
+    </section>
+
     <section id="installation">
       <h2>Installation</h2>
       <p class="intro">Windows 10 ou 11, manette branchée en USB. Les étapes 2 et 3 installent des drivers : elles ne se font qu'une fois.</p>
       <ol class="steps">
-        <li><div><h3>Libérer les palettes</h3><p>Dans l'application Accessoires Xbox, créez un profil dont les quatre palettes sont non assignées, attribuez-le à un emplacement, puis placez le commutateur au dos de la manette sur cet emplacement.</p></div></li>
-        <li><div><h3>Installer USBPcap</h3><p>Depuis <a href="https://desowin.org/usbpcap/">desowin.org/usbpcap</a>, ou en cochant l'option USBPcap dans l'installateur de Wireshark. Redémarrez le PC.</p></div></li>
-        <li><div><h3>Installer ViGEmBus</h3><p>Version 1.22.0, depuis la <a href="https://github.com/nefarius/ViGEmBus/releases">page officielle des versions</a>. Facultatif si vous n'affectez que des touches clavier.</p></div></li>
-        <li><div><h3>Lancer PaletteMap</h3><p>Acceptez la demande d'autorisation de Windows, cliquez sur une palette pour choisir ses boutons ou sa touche, et cochez le lancement au démarrage de Windows.</p></div></li>
+        <li><div><h3>Libérer les palettes</h3><p>Dans l'application Accessoires Xbox, créez un profil dont les quatre palettes sont non assignées, attribuez-le à un emplacement, puis placez le commutateur de profil, en façade de la manette, sur cet emplacement.</p></div></li>
+        <li><div><h3>Installer USBPcap</h3><p>Depuis <a href="https://desowin.org/usbpcap/">desowin.org/usbpcap</a>, ou en cochant l'option «&nbsp;Install USBPcap&nbsp;» (décochée par défaut) dans l'installateur de <a href="https://www.wireshark.org/">Wireshark</a>.</p></div></li>
+        <li><div><h3>Installer ViGEmBus</h3><p>Version 1.22.0, depuis la <a href="https://github.com/nefarius/ViGEmBus/releases">page officielle des versions</a>, rubrique Assets. Facultatif si vous n'affectez que des touches clavier. Redémarrez ensuite le PC.</p></div></li>
+        <li><div><h3>Lancer PaletteMap</h3><p>Téléchargez-le depuis la <a href="https://github.com/ninjathune-human/PaletteMap/releases/latest">page des versions</a>, lancez-le et acceptez la demande d'autorisation de Windows (si un écran bleu SmartScreen apparaît : Informations complémentaires, puis Exécuter quand même), cliquez sur une palette pour choisir ses boutons ou sa touche, et cochez le lancement au démarrage de Windows.</p></div></li>
       </ol>
     </section>
 
