@@ -37,10 +37,10 @@ Tous gratuits. **À réinstaller après une réinstallation de Windows**, dans l
 
 | Logiciel | Rôle | Obligatoire | Sans lui |
 |---|---|---|---|
+| PaletteMap | L'application elle-même | Oui | |
 | [Accessoires Xbox](https://apps.microsoft.com/detail/9nblggh30xj3) (Microsoft Store) | Régler les palettes sur « Non assigné » | Oui, une fois | Les palettes restent des copies de A, B, X ou Y |
 | [USBPcap](https://desowin.org/usbpcap/) | Lire l'état des palettes dans le trafic USB | **Oui** | Rien ne fonctionne : « USBPcap introuvable » |
 | [ViGEmBus 1.22.0](https://github.com/nefarius/ViGEmBus/releases) | Créer la manette virtuelle | Pour les boutons de manette | Seules les touches clavier sont disponibles |
-| PaletteMap | L'application elle-même | Oui | |
 
 Le réglage « Non assigné » est enregistré dans la manette elle-même : il survit à une réinstallation de Windows et n'est à refaire que si vous changez de profil. Aucune installation de .NET n'est nécessaire, l'exécutable est autonome.
 
@@ -54,7 +54,13 @@ ViGEmBus a été archivé par son auteur en novembre 2023 et ne reçoit plus de 
 
 ## Installation
 
-### 1. Libérer les palettes dans Accessoires Xbox
+### 1. Installer PaletteMap
+
+**Version compilée :** téléchargez `PaletteMap.exe` depuis la page [Releases](../../releases/latest) et placez-le dans un dossier définitif (par exemple `C:\Program Files\PaletteMap\`). L'exécutable est autonome, aucune installation de .NET n'est nécessaire.
+
+Au premier lancement, Windows peut afficher un écran SmartScreen bleu, car l'exécutable n'est pas signé : cliquez sur **Informations complémentaires > Exécuter quand même**.
+
+### 2. Libérer les palettes dans Accessoires Xbox
 
 Tant qu'une palette est assignée à un bouton, la manette la transforme elle-même en ce bouton et aucun logiciel ne peut la distinguer.
 
@@ -64,27 +70,21 @@ Tant qu'une palette est assignée à un bouton, la manette la transforme elle-m�
 4. Placez le **commutateur de profil** sur le devant de la manette sur ce même emplacement : le voyant correspondant s'allume en façade.
 5. Fermez Accessoires Xbox.
 
-### 2. Installer USBPcap (indispensable)
+### 3. Installer USBPcap (indispensable)
 
 Au choix :
 
 - téléchargez l'installateur depuis [desowin.org/usbpcap](https://desowin.org/usbpcap/) ;
 - ou installez [Wireshark](https://www.wireshark.org/) en **cochant l'option « Install USBPcap »**, décochée par défaut. Npcap n'est pas nécessaire.
 
-### 3. Installer ViGEmBus (pour les boutons de manette)
+### 4. Installer ViGEmBus (pour les boutons de manette)
 
 1. Ouvrez la [page des versions de ViGEmBus](https://github.com/nefarius/ViGEmBus/releases) et téléchargez l'installateur `.exe` de la version **1.22.0**, dans la rubrique Assets.
 2. Lancez-le, acceptez les demandes de Windows, redémarrez si demandé.
 
 Étape facultative si vous n'affectez que des touches clavier.
 
-**Redémarrez le PC** après les étapes 2 et 3 : USBPcap et ViGEmBus ne sont actifs qu'après un redémarrage.
-
-### 4. Installer PaletteMap
-
-**Version compilée :** téléchargez `PaletteMap.exe` depuis la page [Releases](../../releases/latest) et placez-le dans un dossier définitif (par exemple `C:\Program Files\PaletteMap\`). L'exécutable est autonome, aucune installation de .NET n'est nécessaire.
-
-Au premier lancement, Windows peut afficher un écran SmartScreen bleu, car l'exécutable n'est pas signé : cliquez sur **Informations complémentaires > Exécuter quand même**.
+**Redémarrez le PC** après les étapes 3 et 4 : USBPcap et ViGEmBus ne sont actifs qu'après un redémarrage.
 
 ### 5. Premier lancement
 
@@ -120,7 +120,7 @@ const int ModifierDelay = 25;   // ms
 |---|---|---|
 | « USBPcap introuvable » | USBPcap absent (par exemple après une réinstallation de Windows), PC non redémarré, ou capture déjà ouverte par Wireshark | Installer USBPcap, redémarrer, fermer Wireshark |
 | « Appuie sur un bouton de la manette » persiste | Aucun rapport de la manette reçu | Vérifier le câble USB, puis quitter et relancer PaletteMap |
-| Les témoins ne réagissent pas, mais A, B, X ou Y s'activent | Palettes encore assignées | Refaire l'étape 1 : profil attribué à un emplacement, commutateur sur cet emplacement |
+| Les témoins ne réagissent pas, mais A, B, X ou Y s'activent | Palettes encore assignées | Refaire l'étape 2 : profil attribué à un emplacement, commutateur sur cet emplacement |
 | Menu : « Manette virtuelle indisponible » | ViGEmBus absent ou PC non redémarré | La raison est affichée dans le menu ; installer ViGEmBus 1.22.0 puis redémarrer |
 | Le démarrage automatique lance une ancienne version | La tâche planifiée pointe vers l'ancien fichier | Décocher puis recocher « Lancer au démarrage de Windows » |
 | La compilation des sources échoue | Une instance de PaletteMap verrouille le fichier | Quitter PaletteMap, ou lancer `build.cmd` en administrateur |

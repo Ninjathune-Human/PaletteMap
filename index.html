@@ -159,8 +159,13 @@ footer { padding: 32px 0 48px; border-top: 1px solid var(--line); color: var(--m
 
     <section id="logiciels">
       <h2>Logiciels nécessaires</h2>
-      <p class="intro">Tous gratuits. À réinstaller dans cet ordre après une réinstallation de Windows.</p>
+      <p class="intro">Tous gratuits. À réinstaller après une réinstallation de Windows.</p>
       <ul class="soft">
+        <li>
+          <h3>PaletteMap<span class="req">Obligatoire</span></h3>
+          <p>L'application, en un seul fichier exécutable. Aucune installation de .NET n'est nécessaire.</p>
+          <a class="get" href="https://github.com/ninjathune-human/PaletteMap/releases/latest">Télécharger PaletteMap</a>
+        </li>
         <li>
           <h3>Accessoires Xbox<span class="req">Obligatoire, une fois</span></h3>
           <p>Application Microsoft pour régler les quatre palettes sur «&nbsp;Non assigné&nbsp;». Le réglage reste enregistré dans la manette.</p>
@@ -176,23 +181,19 @@ footer { padding: 32px 0 48px; border-top: 1px solid var(--line); color: var(--m
           <p>Driver qui crée la manette virtuelle. Sans lui, seules les touches clavier sont disponibles.</p>
           <a class="get" href="https://github.com/nefarius/ViGEmBus/releases">Télécharger ViGEmBus</a>
         </li>
-        <li>
-          <h3>PaletteMap<span class="req">Obligatoire</span></h3>
-          <p>L'application, en un seul fichier exécutable. Aucune installation de .NET n'est nécessaire.</p>
-          <a class="get" href="https://github.com/ninjathune-human/PaletteMap/releases/latest">Télécharger PaletteMap</a>
-        </li>
       </ul>
       <p class="note">Redémarrez le PC après avoir installé USBPcap et ViGEmBus : ces drivers ne sont actifs qu'après un redémarrage.</p>
     </section>
 
     <section id="installation">
       <h2>Installation</h2>
-      <p class="intro">Windows 10 ou 11, manette branchée en USB. Les étapes 2 et 3 installent des drivers : elles ne se font qu'une fois.</p>
+      <p class="intro">Windows 10 ou 11, manette branchée en USB. Les étapes 3 et 4 installent des drivers : elles ne se font qu'une fois.</p>
       <ol class="steps">
+        <li><div><h3>Installer PaletteMap</h3><p>Téléchargez PaletteMap.exe depuis la <a href="https://github.com/ninjathune-human/PaletteMap/releases/latest">page des versions</a> et placez-le dans un dossier définitif, par exemple C:\Program Files\PaletteMap. Aucune installation de .NET n'est nécessaire.</p></div></li>
         <li><div><h3>Libérer les palettes</h3><p>Dans l'application Accessoires Xbox, créez un profil dont les quatre palettes sont non assignées, attribuez-le à un emplacement, puis placez le commutateur de profil, en façade de la manette, sur cet emplacement.</p></div></li>
         <li><div><h3>Installer USBPcap</h3><p>Depuis <a href="https://desowin.org/usbpcap/">desowin.org/usbpcap</a>, ou en cochant l'option «&nbsp;Install USBPcap&nbsp;» (décochée par défaut) dans l'installateur de <a href="https://www.wireshark.org/">Wireshark</a>.</p></div></li>
         <li><div><h3>Installer ViGEmBus</h3><p>Version 1.22.0, depuis la <a href="https://github.com/nefarius/ViGEmBus/releases">page officielle des versions</a>, rubrique Assets. Facultatif si vous n'affectez que des touches clavier. Redémarrez ensuite le PC.</p></div></li>
-        <li><div><h3>Lancer PaletteMap</h3><p>Téléchargez-le depuis la <a href="https://github.com/ninjathune-human/PaletteMap/releases/latest">page des versions</a>, lancez-le et acceptez la demande d'autorisation de Windows (si un écran bleu SmartScreen apparaît : Informations complémentaires, puis Exécuter quand même), cliquez sur une palette pour choisir ses boutons ou sa touche, et cochez le lancement au démarrage de Windows.</p></div></li>
+        <li><div><h3>Lancer PaletteMap</h3><p>Acceptez la demande d'autorisation de Windows (si un écran bleu SmartScreen apparaît : Informations complémentaires, puis Exécuter quand même). Cliquez sur une palette pour choisir ses boutons ou sa touche, et cochez le lancement au démarrage de Windows.</p></div></li>
       </ol>
     </section>
 
