@@ -1,0 +1,49 @@
+# Compile PaletteMap.exe sur un runner Windows et le publie comme version GitHub (Releases).
+# Se déclenche à chaque modification du code poussée sur main, ou à la main depuis l'onglet Actions.
+name: Release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - Program.cs
+      - PaletteMap.csproj
+      - app.manifest
+      - .github/workflows/release.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Compiler
+        run: dotnet publish -c Release -o publish
+
+      - name: Publier la version
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="v1.0.${{ github.run_number }}"
+          gh release create "$TAG" publish/PaletteMap.exe \
+            --target "$GITHUB_SHA" \
+            --title "PaletteMap $TAG" \
+            --latest \
+            --notes "Exécutable autonome pour Windows 10 et 11 (64 bits), aucune installation de .NET nécessaire.
+
+          Prérequis : USBPcap (obligatoire) et ViGEmBus 1.22.0 (pour les boutons de manette). Voir l'installation dans le README."
+
+      - name: Déplacer le tag deploye sur le commit publié
+        shell: bash
+        run: |
+          git tag -f deploye "$GITHUB_SHA"
+          git push -f origin refs/tags/deploye
